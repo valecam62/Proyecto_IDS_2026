@@ -1,0 +1,36 @@
+Input: 
+Opción del Menú (1, 2, 3, 4,); 
+ingresar gasto (mes, categoría, descripción, monto); 
+ingresar ingreso (mes, categoría, descripción, monto); 
+consultar gastos (mes; categoría para filtro);
+resumen del mes (lista de gastos) (totales)
+guardar (lista gastos)
+salir
+Proceso:
+Mostrar mensaje de bienvenida;
+Verificar si existe el archivo de datos (path.exists());
+Si existe: leer el archivo (read_text) y convertirlo en lista (json.loads); si no existe: crear lista vacía;
+Calcular dinero disponible (total de ingresos − total de gastos);
+Mostrar menú y leer la opción;
+Validar opción del menú (si no existe, mostrar error y volver a mostrar el menú);
+Ingresar gasto: validar mes (1 a 12), validar categoría (de la lista permitida), validar que el monto sea un número mayor que 0;
+Crear diccionario del gasto (tipo “gasto”) y agregarlo a la lista;
+Ingresar ingreso: validar mes, categoría y monto igual que en el gasto;
+Crear diccionario del ingreso (tipo “ingreso”) y agregarlo a la lista;
+Recalcular dinero disponible después de cada registro;
+Consultar gastos: validar mes y categoría; recorrer la lista y filtrar los registros que coincidan;
+Si no hay registros para ese mes, preparar mensaje de aviso;
+Resumen del mes: validar mes; recorrer la lista y sumar ingresos y gastos del mes por categoría;
+Calcular porcentaje por categoría (gasto de la categoría ÷ total de gastos del mes × 100);
+Calcular dinero disponible del mes (ingresos del mes − gastos del mes);
+Guardar: convertir la lista a texto (json.dumps) y escribirla en el archivo (path.write_text);
+Salir: guardar los datos y terminar el ciclo del menú;
+Output:
+Mostrar mensaje de bienvenida al sistema
+Lista de gastos previos y mostrar el dinero disponible o “no hay información previa”
+“Esa opción del menú no existe”
+Mostrar gastos e ingresos del mes actualizados o “error no puedes ingresar dinero negativo”
+“ese mes no existe”, “categoría no existe”, “no has registrado nada para este mes”
+Mostrar datos del mes consultado con los ingresos, gastos y porcentajes por categoría
+Mostrar “datos guardados”
+Mostrar “Se ha cerrado el sistema”
