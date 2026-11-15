@@ -17,7 +17,7 @@ Menu = ["1", "2", "3","4", "5"]
 Tipos = ["gasto", "ingreso"]
 Categorias_gasto = ["alimentación", "transporte", "educacion", "entretenimiento", "otros"]
 Categorias_ingreso = ["mesada", "trabajo", "beca", "otros"]
-Meses = list(range(1, 12))
+Meses = list(range(1, 13))
 tipos = ("ingreso", "gasto")
 #Definiremos las funciones a utilizar
 
@@ -30,11 +30,15 @@ def pedir_tipo():
         
 def pedir_mes():
     while True:
-        mes = input("Ingresa el número del mes (1-12): ")
-        if mes not in Meses:
-            print("Error ingrese un mes correcto (1-12)")
+        try:
+            mes = int(input("Ingresa el número del mes (1-12): "))
+        except ValueError:
+            print("Ese no existe")
         else:
-            return mes
+            if mes in Meses:
+                return mes
+            else:
+                print("Ese mes no existe")
         
 def pedir_categoria(tipo):
     if tipo == "gasto":
@@ -43,7 +47,7 @@ def pedir_categoria(tipo):
         categorias = Categorias_ingreso
     print("CATEGORÍAS:")
     for i in categorias:
-        print(f"- {categorias}")
+        print(f"- {i}")
     while True:
         categoria = input("Escriba su categoría de las de la lista").strip().lower()
         if categoria in categorias:
@@ -53,11 +57,15 @@ def pedir_categoria(tipo):
             
 def pedir_monto():
     while True:
-        monto = float(input("Escriba en número el monto: $"))
-        if monto <0:
-            print("Error ese monto no es aceptable")
+        try:
+            monto = float(input("Escriba en número el monto: $"))
+        except ValueError:
+            print("Error el monto debe ser un número")
         else:
-            return monto
+            if monto <= 0:#Si es mayor o igual no se puede subir montos de $0
+                print("Error ese monto no es aceptable")
+            else:
+                return monto
 
 def calcular_disponible(movimientos):
     disponible = 0
@@ -90,7 +98,7 @@ def guardar_datos(movimientos, path):
 def mostrar_movimientos(lista):
     for movimiento in lista:
         print(f"Tipo de movimiento: {movimiento["tipo"]}")
-        print(f"Categoría: {movimiento["categoría"].title()}")
+        print(f"Categoría: {movimiento["categoria"].title()}")
         print(f"Descripción: {movimiento["descripcion"]}")
         print(f"Mes: {movimiento["mes"]}")
         print(f"Monto: ${movimiento["monto"]}")
@@ -99,7 +107,7 @@ def registrar_movimiento(movimientos):
     print("Registrar movimiento")
     tipo = pedir_tipo()
     mes = pedir_mes()
-    categoria = pedir_categoria()
+    categoria = pedir_categoria(tipo)
     descripcion = input("Descripción: ")
     monto = pedir_monto()
     
@@ -154,7 +162,7 @@ def resumen_del_mes(movimientos):
     hubo_movimientos = False
     
     for movimiento in movimientos:
-        if movimientos["mes"] == mes:
+        if movimiento["mes"] == mes:
             hubo_movimientos = True
             if movimiento["tipo"] == "ingreso":
                 total_ingresos += movimiento["monto"]
@@ -171,7 +179,7 @@ def resumen_del_mes(movimientos):
         print("\n Gastos por categoria: ")
         for categoria, monto in gastos_cat.items():
             porcentaje = round(monto / total_gastos * 100, 1)
-            print(f"{categoria.tittle()}: ${round(monto, 2)} ({porcentaje}%)")
+            print(f"{categoria.title()}: ${round(monto, 2)} ({porcentaje}%)")
             
         if disponible < 0:
          print("\n Gastaste más de lo que ingresaste")   
