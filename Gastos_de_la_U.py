@@ -23,7 +23,7 @@ tipos = ("ingreso", "gasto")
 
 def pedir_tipo():
     while True:
-        tipo = input("Ingresa el tipo (ingreso/gasto: )").lower()
+        tipo = input("Ingresa el tipo (ingreso/gasto): ").lower()
         if tipo in tipos:
             return tipo
         print("Dato inválido")
@@ -49,7 +49,7 @@ def pedir_categoria(tipo):
     for i in categorias:
         print(f"- {i}")
     while True:
-        categoria = input("Escriba su categoría de las de la lista").strip().lower()
+        categoria = input("Escriba su categoría de las de la lista: ").strip().lower()
         if categoria in categorias:
             return categoria
         else:
@@ -204,7 +204,7 @@ def main():
     path = Path("movimientos.json")  
     movimientos = cargar_datos(path)
     if movimientos:
-        print("\nMovimientos orevios:")
+        print("\nMovimientos previos:")
         mostrar_movimientos(movimientos)
         print(f"Dinero disponible: ${round(calcular_disponible(movimientos), 2)}")
         
