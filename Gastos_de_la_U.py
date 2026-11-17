@@ -19,6 +19,30 @@ Categorias_gasto = ["alimentación", "transporte", "educacion", "entretenimiento
 Categorias_ingreso = ["mesada", "trabajo", "beca", "otros"]
 Meses = list(range(1, 13))
 tipos = ("ingreso", "gasto")
+
+#Definiremos a una clase
+class ResumenMes:
+    """Guarda los totales de un mes y calcula el dinero disponible."""
+
+    def __init__(self, mes):
+        self.mes = mes
+        self.total_ingresos = 0
+        self.total_gastos = 0
+        self.gastos_cat = {}
+
+    def agregar(self, movimiento):
+        """Suma un movimiento al total de ingresos o de gastos."""
+        if movimiento["tipo"] == "ingreso":
+            self.total_ingresos += movimiento["monto"]
+        else:
+            self.total_gastos += movimiento["monto"]
+            categoria = movimiento["categoria"]
+            self.gastos_cat[categoria] = self.gastos_cat.get(categoria, 0) + movimiento["monto"]
+
+    def calcular_disponible(self):
+        """Regla R6: ingresos menos gastos."""
+        return self.total_ingresos - self.total_gastos
+
 #Definiremos las funciones a utilizar
 
 def pedir_tipo():
@@ -156,36 +180,29 @@ def consultar_gastos(movimientos):
 def resumen_del_mes(movimientos):
     print("\n Resumen del mes")
     mes = pedir_mes()
-    total_ingresos = 0
-    total_gastos = 0
-    gastos_cat = {}
+    resumen = ResumenMes(mes)          # se crea el objeto
     hubo_movimientos = False
-    
+
     for movimiento in movimientos:
         if movimiento["mes"] == mes:
             hubo_movimientos = True
-            if movimiento["tipo"] == "ingreso":
-                total_ingresos += movimiento["monto"]
-            else:
-                total_gastos += movimiento["monto"]
-                categoria = movimiento["categoria"]
-                gastos_cat[categoria] = gastos_cat.get(categoria, 0) + movimiento["monto"]
+            resumen.agregar(movimiento)    # se usa el método
+
     if hubo_movimientos:
-        disponible = total_ingresos - total_gastos
-        print(f"Ingresos: ${round(total_ingresos, 2)}")
-        print(f"Gastos: $ {round(total_gastos, 2)}")
+        disponible = resumen.calcular_disponible()
+        print(f"Ingresos: ${round(resumen.total_ingresos, 2)}")
+        print(f"Gastos: ${round(resumen.total_gastos, 2)}")
         print(f"Disponible: ${round(disponible, 2)}")
-        
+
         print("\n Gastos por categoria: ")
-        for categoria, monto in gastos_cat.items():
-            porcentaje = round(monto / total_gastos * 100, 1)
+        for categoria, monto in resumen.gastos_cat.items():
+            porcentaje = round(monto / resumen.total_gastos * 100, 1)
             print(f"{categoria.title()}: ${round(monto, 2)} ({porcentaje}%)")
-            
+
         if disponible < 0:
-         print("\n Gastaste más de lo que ingresaste")   
+            print("\n Gastaste más de lo que ingresaste")
     else:
         print("No has registrado nada para este mes")
-        
         
 def saludo():
     print("BIENVENIDO A TU HOJA DE GASTOS, DONDE PODRÁS MANEJAR TU DINERO COMO UNIVERSITARIO")
